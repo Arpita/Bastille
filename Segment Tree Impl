@@ -1,0 +1,69 @@
+/*
+    Segment Tree Implementation in C++
+    Having Query function
+    m[] is used to store the segment nodes and a[] is array of integers
+    
+    Query function return minimum in the given range
+    
+*/
+
+#include<stdio.h>
+int m[10000],a[10000],n;
+void build(int node,int start,int end)
+{
+    if(start==end)
+    {
+        m[node]=start;
+        return;
+    }
+    build(2*node,start,(start+end)/2);
+    build((2*node)+1,((start+end)/2)+1,end);
+    if(a[m[2*node]]<=a[m[(2*node)+1]])
+    m[node]=m[2*node];
+    else
+    m[node]=m[2*node+1];
+    return;
+}
+int query(int node,int start,int end,int i,int j)
+{
+    int t1,t2;
+    if(i>end||j<start) return -1;
+    if((i<=start)&&(j>=end))
+    {
+        return m[node];
+    }
+    t1=query(2*node,start,(start+end)/2,i,j);
+    t2=query((2*node)+1,((start+end)/2)+1,end,i,j);
+    if((t1==-1)&&(t2==-1))return -1;
+    else if (t1==-1) return t2;
+    else if (t2 ==-1) return t1;
+    else if(a[t1]<=a[t2]) return t1;
+    else return t2;
+}
+
+/*
+  node represents node of segment tree
+  start and end reprsesnts the range of this node
+  i represents the index of array to be updated with value 'val'
+*/
+void update(int node,int start, int end,int i,int val)
+{
+    /*
+          Write your Code here..
+    */
+}
+
+int main()
+{
+    int i,j;
+    printf("\nEnter The size of array    :");
+    scanf("%d",&n);
+    printf("\nEnter the array elements........");
+    for(i=0;i<n;i++)
+    scanf("%d",&a[i]);
+    build(1,0,n-1);
+    printf("\nEnter the range to search for(i,j)    :");
+    scanf("%d%d",&i,&j);
+    printf("\n%d",query(1,0,n-1,i,j));
+    return 0;
+}
